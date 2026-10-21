@@ -1,0 +1,57 @@
+import * as React from "react";
+import { cn } from "@/lib/utils";
+
+export function ContainerInner({
+  children,
+  className,
+  ...props
+}: React.ComponentPropsWithoutRef<"div">) {
+  return (
+    <div className={cn(className)} {...props}>
+      {children}
+    </div>
+  );
+}
+
+export function ContainerOuter({
+  children,
+  className,
+  component: Component = "div",
+  ...props
+}: {
+  children?: React.ReactNode;
+  className?: string;
+  component?: React.ElementType;
+} & Record<string, unknown>) {
+  return React.createElement(
+    Component,
+    { className, ...props },
+    children
+  );
+}
+
+interface ContainerProps extends React.ComponentPropsWithoutRef<"div"> {
+  className?: string;
+  component?: React.ElementType;
+  wrapperClassName?: string;
+}
+
+export function Container({
+  className,
+  component = "div",
+  children,
+  wrapperClassName,
+  ...props
+}: ContainerProps) {
+  return (
+    <ContainerOuter
+      component={component}
+      className={wrapperClassName}
+      {...props}
+    >
+      <ContainerInner className={cn(className, "px-safe")}>
+        {children}
+      </ContainerInner>
+    </ContainerOuter>
+  );
+}
